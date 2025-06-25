@@ -3,10 +3,11 @@ from django.urls import path
 from tracker import views
 from django.http import HttpResponse
 from django.conf import settings
+from django.shortcuts import redirect
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', lambda request: HttpResponse("Server is running ✅")),  # ✅ Render health check
+    path('', lambda request: redirect('register')),  # ✅ Redirects to /register/
     path('admin/', admin.site.urls),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
