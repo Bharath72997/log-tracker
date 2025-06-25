@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,18 +67,12 @@ TEMPLATES = [
 # WSGI
 WSGI_APPLICATION = 'worklog.wsgi.application'
 
-# Database (PostgreSQL)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'worklogdb',
-        'USER': 'postgres',
-        'PASSWORD': 'Bharath@1608',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',  # optional fallback for local dev
+        conn_max_age=600
+    )
 }
-
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -99,7 +94,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -117,3 +112,5 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
