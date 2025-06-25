@@ -16,8 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-h5v%t&)f^1g)3^rf$x4x702586+80c7v(dhe(9bjice%6r@&#n'
 
 # Debug mode
-DEBUG = False
-ALLOWED_HOSTS = ['log-tracker-oxu6.onrender.com']  # You'll change this later
+DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'log-tracker-oxu6.onrender.com']
+
 
 
 # Installed apps

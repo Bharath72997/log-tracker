@@ -3,6 +3,7 @@ from .models import Task, WorkReport, PendingRegistration
 from .forms import EmployerRegistrationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -25,22 +26,29 @@ def register_view(request):
         form = EmployerRegistrationForm()
 
     return render(request, 'register.html', {'form': form})
+
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect('dashboard')
+            if not username or not password:
+                return render(request, 'login.html', {'error': 'Username and password required'})
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('dashboard')
+                else:
+                    return render(request, 'login.html', {'error': 'Account not approved by admin yet'})
             else:
-                messages.error(request, 'Your account is pending approval by the admin.')
-        else:
-            messages.error(request, 'Invalid credentials.')
+                return render(request, 'login.html', {'error': 'Invalid credentials'})
+        except Exception as e:
+            return render(request, 'login.html', {'error': f'Error occurred: {str(e)}'})
     return render(request, 'login.html')
-
 def logout_view(request):
     logout(request)
     return redirect('login')
