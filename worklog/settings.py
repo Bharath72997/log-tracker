@@ -17,7 +17,7 @@ SECRET_KEY = 'django-insecure-h5v%t&)f^1g)3^rf$x4x702586+80c7v(dhe(9bjice%6r@&#n
 
 # Debug mode
 DEBUG = False
-ALLOWED_HOSTS = ['your-app-name.onrender.com']  # You'll change this later
+ALLOWED_HOSTS = ['log-tracker-oxu6.onrender.com']  # You'll change this later
 
 
 # Installed apps
