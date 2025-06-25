@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Reports{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">📋 All Submitted Reports</h2>
+
+    {% if reports %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Employee</th>
+                    <th>Task</th>
+                    <th>Report</th>
+                    <th>File</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.user.username }}</td>
+                    <td>{{ report.task.title }}</td>
+                    <td>{{ report.report_text }}</td>
+                    <td>
+                        {% if report.report_file %}
+                            <a href="{{ report.report_file.url }}" download class="btn btn-sm btn-outline-primary">📎 Download</a>
+                        {% else %}
+                            <span class="text-muted">No File</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ report.timestamp|date:"M d, Y - H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-warning">No reports submitted yet.</div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">🔓 Logout</a>
+    </div>
+</div>
+{% endblock %}

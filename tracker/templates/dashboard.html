@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">👋 Welcome, {{ user.username }}</h2>
+
+    <h4 class="mb-3">📝 Your Tasks</h4>
+    {% if tasks %}
+        {% for task in tasks %}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">{{ task.title }}</h5>
+                <p class="card-text">{{ task.description }}</p>
+                <p class="text-muted mb-3">⏰ Deadline: {{ task.deadline }}</p>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                    <div class="mb-3">
+                        <textarea name="report_text" class="form-control" rows="3" placeholder="Write your work report here..." required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" name="report_file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">🚀 Submit Report</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">No tasks assigned to you yet.</div>
+    {% endif %}
+
+    <h4 class="mt-5">📊 Your Submitted Reports</h4>
+    {% if reports %}
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Task</th>
+                    <th>Report</th>
+                    <th>File</th>
+                    <th>Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.task.title }}</td>
+                    <td>{{ report.report_text }}</td>
+                    <td>
+                        {% if report.report_file %}
+                            <a href="{{ report.report_file.url }}" class="btn btn-sm btn-outline-primary" download>📎 File</a>
+                        {% else %}
+                            <span class="text-muted">No file</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ report.timestamp|date:"M d, Y - H:i" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p class="text-muted">You haven't submitted any reports yet.</p>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">🔓 Logout</a>
+    </div>
+</div>
+{% endblock %}
